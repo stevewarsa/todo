@@ -1,0 +1,51 @@
+<div class="container" *ngIf="showInitializing" style="padding: 10px !important;">
+    <div class="row">
+      <div class="col-md col-sm">
+        <p>Initializing...</p>
+      </div>
+    </div>
+  </div>
+  <div class="container" *ngIf="showLoggingIn" style="padding: 10px !important;">
+    <div class="row">
+      <div class="col-md col-sm">
+        <p class="lead">Logging in...</p>
+        <img src="assets/ajax-loader.gif" />
+      </div>
+    </div>
+  </div>
+  <div class="container" *ngIf="!showInitializing && !showLoggingIn" style="padding: 10px !important;">
+    <div class="row">
+      <div class="col-md col-sm">
+        <form class="form-horizontal login-form" role="form">
+          <div class="form-group">
+            <label for="userId" class="col-md col-sm control-label">User ID:</label>
+            <div class="col-md col-sm">
+              <input type="text" maxlength="20" class="form-control" [(ngModel)]="userId" id="userId" name="userId" placeholder="Enter User ID" autofocus>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password" class="col-md col-sm control-label">Password:</label>
+            <div class="col-md col-sm col-md-offset-2 col-sm-offset-2">
+              <input type="password" class="form-control" [(ngModel)]="password" id="password" name="password" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md col-sm col-md-offset-2 col-sm-offset-2">
+              <button [disabled]="!password || password.trim() === ''" type="button" class="btn btn-primary btn-block" (click)="login()">Login</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md col-sm col-md-offset-2 col-sm-offset-2">
+              <label class="checkbox-inline"> 
+                <input type="checkbox" name="remember_me" [(ngModel)]="rememberMe"/>
+                Remember Me
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row" *ngIf="errorMessage !== null" style="padding: 10px !important;">
+      <font color="red"><b>{{errorMessage}}</b></font>
+    </div>
+  </div>
