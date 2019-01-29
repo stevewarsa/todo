@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { Router } from '@angular/router';
+import { Todo } from '../todo';
 
 @Component({
   selector: 'td-todo-table',
@@ -8,11 +9,24 @@ import { Router } from '@angular/router';
   styleUrls: ['./todo-table.component.css']
 })
 export class TodoTableComponent implements OnInit {
-  listOfTodos: any[] = [
-    {category: 'Nuggets', title: 'Nuggets frequency categories', description: 'There should be 3 categories: "Just Added", "Practice Daily", "Maintenance Mode"'},
-    {category: 'Links', title: 'Export links for import into custom search engine', description: null},
-    {category: 'Worship Team Tool', title: 'Changing Special Worship Days', description: 'When changing (or deleting) special worship days, make sure to update or remove people assigned to those days'}
+  listOfTodos: Todo[] = [
+    <Todo>{
+      category: 'Nuggets', 
+      title: 'Nuggets frequency categories', 
+      description: 'There should be 3 categories: "Just Added", "Practice Daily", "Maintenance Mode"'
+    },
+    <Todo>{
+      category: 'Links', 
+      title: 'Export links for import into custom search engine', 
+      description: null
+    },
+    <Todo>{
+      category: 'Worship Team Tool', 
+      title: 'Changing Special Worship Days', 
+      description: 'When changing (or deleting) special worship days, make sure to update or remove people assigned to those days'
+    }
   ];
+
   filteredTodos: any[] = [];
   mobile: boolean = false;
   private MAX_LEN: number = 50;

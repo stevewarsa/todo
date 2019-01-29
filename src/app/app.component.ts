@@ -13,7 +13,6 @@ export class AppComponent {
   constructor(private databaseService: DatabaseService, private route: Router) {
     route.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
-        console.log(event.url);
         this.currUser = databaseService.loggedInUser;
       }
     });
