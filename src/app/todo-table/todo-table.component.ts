@@ -4,51 +4,47 @@ import { Router } from '@angular/router';
 import { Todo } from '../todo';
 
 @Component({
-  selector: 'td-todo-table',
   templateUrl: './todo-table.component.html',
   styleUrls: ['./todo-table.component.css']
 })
 export class TodoTableComponent implements OnInit {
-  listOfTodos: Todo[] = [
-    <Todo>{
-      category: 'Nuggets', 
-      title: 'Nuggets frequency categories', 
-      description: 'There should be 3 categories: "Just Added", "Practice Daily", "Maintenance Mode"'
-    },
-    <Todo>{
-      category: 'Links', 
-      title: 'Export links for import into custom search engine', 
-      description: null
-    },
-    <Todo>{
-      category: 'Worship Team Tool', 
-      title: 'Changing Special Worship Days', 
-      description: 'When changing (or deleting) special worship days, make sure to update or remove people assigned to those days'
-    }
-  ];
-
-  filteredTodos: any[] = [];
+  listOfTodos: Todo[] = [];
+  filteredTodos: Todo[] = [];
   mobile: boolean = false;
   private MAX_LEN: number = 50;
   private currUser: string = null;
+  initializing: boolean = false;
 
   constructor(private databaseService: DatabaseService, private route: Router) {}
 
   ngOnInit() {
     this.currUser = this.databaseService.loggedInUser;
     if (!this.currUser) {
-      // counter not logged in, so re-route to login
+      // user not logged in, so re-route to login
       this.route.navigate(['']);
       return;
     }
     if (window.screen.width < 700) { // 768px portrait
       this.mobile = true;
     }
-    this.listOfTodos.forEach(x => this.filteredTodos.push(Object.assign({}, x)));
+    this.initializing = true;
+    this.databaseService.getTodos().subscribe((todos: Todo[]) => {
+      this.listOfTodos = todos;
+      this.listOfTodos.forEach(td => this.filteredTodos.push(Object.assign({}, td)));
+      this.initializing = false;
+    });
   }
 
   filterItems(event: any) {
-    this.filteredTodos = this.listOfTodos.filter(td => td.title.toUpperCase().includes(event.target.value.toUpperCase()) || (td.description && td.description.toUpperCase().includes(event.target.value.toUpperCase())));
+    let searchString = event.target.value.toUpperCase();
+    this.filteredTodos = this.listOfTodos.filter(td => {
+      for (let field of ["category", "title", "description"]) {
+        if (td[field] && td[field].toUpperCase().includes(searchString)) {
+          return true;
+        }
+      }
+      return false;
+    });
   }
 
   shorten(description: string): string {

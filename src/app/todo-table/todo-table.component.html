@@ -1,4 +1,7 @@
-<div class="container">
+<div *ngIf="initializing" class="container">
+  Initializing list of TODOs...
+</div>
+<div *ngIf="!initializing" class="container">
   <input type="text" class="form-control input-lg" placeholder="Filter entries" (keyup)="filterItems($event)">
   <table class="table table-condensed table-striped table-bordered">
     <thead>

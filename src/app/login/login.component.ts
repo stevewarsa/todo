@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { DatabaseService } from '../database.service';
 
 @Component({
-  selector: 'td-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -28,7 +27,6 @@ export class LoginComponent implements OnInit {
       this.login();
     }
   }
-
 
   login() {
     this.databaseService.loggedInUser = this.userId;
