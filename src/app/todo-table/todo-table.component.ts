@@ -14,6 +14,9 @@ export class TodoTableComponent implements OnInit {
   private MAX_LEN: number = 50;
   private currUser: string = null;
   initializing: boolean = false;
+  initializingMessage: string = null;
+  showAddForm: boolean = false;
+  todoToAdd: Todo = new Todo();
 
   constructor(private databaseService: DatabaseService, private route: Router) {}
 
@@ -28,10 +31,24 @@ export class TodoTableComponent implements OnInit {
       this.mobile = true;
     }
     this.initializing = true;
+    this.initializingMessage = "Initializing list of TODOs...";
     this.databaseService.getTodos().subscribe((todos: Todo[]) => {
       this.listOfTodos = todos;
       this.listOfTodos.forEach(td => this.filteredTodos.push(Object.assign({}, td)));
       this.initializing = false;
+    });
+  }
+
+  addTodo() {
+    this.initializing = true;
+    this.initializingMessage = "Adding new TODO...";
+    this.databaseService.addTodo(this.todoToAdd).subscribe((returnedTodo: Todo) => {
+      this.listOfTodos.push(returnedTodo);
+      this.filteredTodos.push(Object.assign({}, returnedTodo));
+      this.todoToAdd = new Todo();
+      this.showAddForm = false;
+      this.initializing = false;
+      this.initializingMessage = null;
     });
   }
 

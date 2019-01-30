@@ -1,7 +1,24 @@
 <div *ngIf="initializing" class="container">
-  Initializing list of TODOs...
+  {{initializingMessage}}
 </div>
 <div *ngIf="!initializing" class="container">
+  <button [hidden]="showAddForm" (click)="showAddForm = true" type="button" class="btn btn-secondary mb-2"><i class="fa fa-plus-square"></i> Show Add Form</button>
+  <button [hidden]="!showAddForm" (click)="showAddForm = false" type="button" class="btn btn-secondary mb-2"><i class="fa fa-minus-square-o"></i> Hide Add Form</button>
+  <form [hidden]="!showAddForm" class="form-inline mr-3 mb-2">
+    <div class="form-group">
+      <label class="mr-2" for="category">Category:</label>
+      <input type="text" class="form-control" id="category" name="category" [(ngModel)]="todoToAdd.category">
+    </div>
+    <div class="form-group mr-3">
+      <label class="mr-2" for="title">Title:</label>
+      <input type="text" class="form-control" id="title" name="title" [(ngModel)]="todoToAdd.title">
+    </div>
+    <div class="form-group mr-3">
+        <label class="mr-2" for="desc">Description:</label>
+        <textarea class="form-control" name="desc" id="desc" name="desc" cols="20" rows="2" [(ngModel)]="todoToAdd.description"></textarea>
+      </div>
+      <button type="button" (click)="addTodo()" class="btn btn-primary">Add TODO</button>
+  </form>
   <input type="text" class="form-control input-lg" placeholder="Filter entries" (keyup)="filterItems($event)">
   <table class="table table-condensed table-striped table-bordered">
     <thead>

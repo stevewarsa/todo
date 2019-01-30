@@ -5,6 +5,7 @@ export class Todo {
     public static DEPLOYED: string = "DEPLOYED";
     public static CLOSED: string = "CLOSED";
     
+    id: number = -1;
     category: string = null;
     title: string = null;
     description: string = null;
