@@ -72,4 +72,18 @@ export class DatabaseService {
       observer.next(newTodo);
     });
   }
+
+  public editTodo(todo: Todo): Observable<string> {
+    return Observable.create(observer => {
+      DatabaseService.todos.forEach(td => {
+        if (td.id === todo.id) {
+          td.category = todo.category;
+          td.description = todo.description;
+          td.status = todo.status;
+          td.title = todo.title;
+        }
+      });
+      observer.next("success");
+    });
+  }
 }

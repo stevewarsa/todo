@@ -17,6 +17,8 @@ export class TodoTableComponent implements OnInit {
   initializingMessage: string = null;
   showAddForm: boolean = false;
   todoToAdd: Todo = new Todo();
+  viewingTodo: Todo = null;
+  editingTodo: boolean = false;
 
   constructor(private databaseService: DatabaseService, private route: Router) {}
 
@@ -41,15 +43,54 @@ export class TodoTableComponent implements OnInit {
 
   addTodo() {
     this.initializing = true;
-    this.initializingMessage = "Adding new TODO...";
-    this.databaseService.addTodo(this.todoToAdd).subscribe((returnedTodo: Todo) => {
-      this.listOfTodos.push(returnedTodo);
-      this.filteredTodos.push(Object.assign({}, returnedTodo));
-      this.todoToAdd = new Todo();
-      this.showAddForm = false;
-      this.initializing = false;
-      this.initializingMessage = null;
-    });
+    if (this.editingTodo) {
+      // don't add a new TODO, because we're editing an existing one
+      this.initializingMessage = "Saving changes to TODO...";
+      this.databaseService.editTodo(this.todoToAdd).subscribe((response: string) => {
+        this.listOfTodos.forEach(td => {
+          if (td.id === this.todoToAdd.id) {
+            this.updateFrom(this.todoToAdd, td);  
+          }
+        });
+        this.filteredTodos.forEach(td => {
+          if (td.id === this.todoToAdd.id) {
+            this.updateFrom(this.todoToAdd, td);  
+          }
+        });
+        this.cleanupAfterAddEditForm();
+      });
+    } else {
+      this.initializingMessage = "Adding new TODO...";
+      this.databaseService.addTodo(this.todoToAdd).subscribe((returnedTodo: Todo) => {
+        this.listOfTodos.push(returnedTodo);
+        this.filteredTodos.push(Object.assign({}, returnedTodo));
+        this.cleanupAfterAddEditForm();
+      });
+    }
+  }
+
+  private updateFrom(fromTodo: Todo, to: Todo) {
+    to.category = fromTodo.category;
+    to.description = fromTodo.description;
+    to.status = fromTodo.status;
+    to.title = fromTodo.title;  
+  }
+  private cleanupAfterAddEditForm() {
+    this.todoToAdd = new Todo();
+    this.showAddForm = false;
+    if (this.editingTodo) {
+      this.editingTodo = false;
+      this.viewingTodo = null;
+    }
+    this.initializing = false;
+    this.initializingMessage = null;
+  }
+
+  editTodo(viewingTodo: Todo) {
+    // clone it...
+    this.todoToAdd = Object.assign({}, viewingTodo);
+    this.showAddForm = true;
+    this.editingTodo = true;
   }
 
   filterItems(event: any) {
