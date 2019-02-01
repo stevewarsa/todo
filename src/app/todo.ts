@@ -6,7 +6,7 @@ export class Todo {
     public static CLOSED: string = "CLOSED";
     
     id: number = -1;
-    category: string = null;
+    category: string = "Default";
     title: string = null;
     description: string = null;
     status: string = Todo.NEW;

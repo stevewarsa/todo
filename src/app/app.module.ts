@@ -8,13 +8,15 @@ import { TodoTableComponent } from './todo-table/todo-table.component';
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ViewEditTodoComponent } from './view-edit-todo/view-edit-todo.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     TodoTableComponent,
-    LoginComponent
+    LoginComponent,
+    ViewEditTodoComponent
   ],
   imports: [
     BrowserModule,

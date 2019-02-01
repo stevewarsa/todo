@@ -2,7 +2,7 @@
   {{initializingMessage}}
 </div>
 <div *ngIf="!initializing" class="container">
-  <button [hidden]="showAddForm" (click)="showAddForm = true" type="button" class="btn btn-secondary mb-2"><i class="fa fa-plus-square"></i> Show Add Form</button>
+  <button [hidden]="showAddForm" (click)="viewAddForm()" type="button" class="btn btn-secondary mb-2"><i class="fa fa-plus-square"></i> Show Add Form</button>
   <button [hidden]="!showAddForm" (click)="showAddForm = false" type="button" class="btn btn-secondary mb-2"><i class="fa fa-minus-square-o"></i> Hide Add Form</button>
   <form [hidden]="!showAddForm" class="form-inline mr-3 mb-2">
     <div class="form-group">
@@ -11,30 +11,16 @@
     </div>
     <div class="form-group mr-3">
       <label class="mr-2" for="title">Title:</label>
-      <input type="text" class="form-control" id="title" name="title" [(ngModel)]="todoToAdd.title">
+      <input #titleInput type="text" class="form-control" id="title" name="title" [(ngModel)]="todoToAdd.title">
     </div>
     <div class="form-group mr-3">
         <label class="mr-2" for="desc">Description:</label>
-        <textarea class="form-control" name="desc" id="desc" name="desc" cols="20" rows="2" [(ngModel)]="todoToAdd.description"></textarea>
+        <textarea class="form-control" name="desc" id="desc" name="desc" cols="20" rows="4" [(ngModel)]="todoToAdd.description"></textarea>
       </div>
       <button type="button" (click)="addTodo()" class="btn btn-primary">{{editingTodo ? 'Save Changes to ' : 'Add '}} TODO</button>
   </form>
   <input type="text" class="form-control input-lg" placeholder="Filter entries" (keyup)="filterItems($event)">
-  <div [hidden]="!viewingTodo" class="border">
-    <h4>Todo Detail for ID {{viewingTodo?.id}}</h4>
-      <ul class="list-group">
-        <li class="list-group-item">
-          <strong>Title: </strong>{{viewingTodo?.title}}&nbsp;&nbsp;
-          <a class="link" (click)="editTodo(viewingTodo)">
-            <i class="fa fa-edit"></i>
-          </a><br/>
-          <strong>Category: </strong> {{viewingTodo?.category}}<br/>
-          <strong>Description: </strong> {{viewingTodo?.description}}<br />
-          <button (click)="viewingTodo = null" type="button" class="btn btn-primary mb-2"><i class="fa fa-minus-square-o"></i> Hide</button>
-        </li>
-      </ul>
-  </div>
-  <table [hidden]="viewingTodo" class="table table-condensed table-striped table-bordered">
+  <table class="table table-condensed table-striped table-bordered">
     <thead>
       <tr>
         <th>Category</th>
@@ -45,8 +31,8 @@
     <tbody>
       <tr *ngFor="let todo of filteredTodos">
         <td>{{todo.category}}</td>
-        <td>{{todo.title}}</td>
-        <td (click)="viewingTodo = todo" placement="left" [ngbTooltip]="todo.description">{{todo.description ? shorten(todo.description) : "(No
+        <td><a (click)="editTodo(todo)">{{todo.title}}</a></td>
+        <td placement="left" [ngbTooltip]="todo.description">{{todo.description ? shorten(todo.description) : "(No
           Description)" }}</td>
       </tr>
     </tbody>

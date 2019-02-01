@@ -37,6 +37,8 @@ export class DatabaseService {
     }
   ];
 
+  private _editingTodo: Todo = null;
+
   constructor(private httpService: HttpClient) { }
 
   public set loggedInUser(user: string) {
@@ -45,6 +47,14 @@ export class DatabaseService {
 
   public get loggedInUser(): string {
     return this._loggedInUser;
+  }
+
+  public set editingTodo(td: Todo) {
+    this._editingTodo = td;
+  }
+
+  public get editingTodo(): Todo {
+    return this._editingTodo;
   }
 
   public doLogin(loginParam: any): Observable<any> {
