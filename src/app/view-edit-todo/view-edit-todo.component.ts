@@ -28,7 +28,7 @@ export class ViewEditTodoComponent implements OnInit {
   updateTodo() {
     this.initializing = true;
     this.initializingMessage = "Saving changes to TODO...";
-    this.databaseService.editTodo(this.todo).subscribe((response: string) => {
+    this.databaseService.editTodo(this.todo).subscribe((todo: Todo) => {
       this.initializing = false;
       this.initializingMessage = null;
       this.route.navigate(['main']);
