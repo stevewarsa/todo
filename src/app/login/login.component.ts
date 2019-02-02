@@ -29,14 +29,25 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.databaseService.loggedInUser = this.userId;
-    this.showLoggingIn = true;
-    if (this.rememberMe) {
-      // write cookie so they won't have to login next time
-      console.log("Writing out cookies for automatic login");
-      CookieUtils.setCookie('user.id', this.userId, 999);
-      CookieUtils.setCookie('user.pwd', this.password, 999);
-    }
-    this.route.navigate(['main']);
+    this.databaseService.doLogin({uid: this.userId, pwd: this.password}).subscribe((response: string) => {
+      if (response === "success") {
+        this.databaseService.loggedInUser = this.userId;
+        this.showLoggingIn = true;
+        if (this.rememberMe) {
+          // write cookie so they won't have to login next time
+          console.log("Writing out cookies for automatic login");
+          CookieUtils.setCookie('user.id', this.userId, 999);
+          CookieUtils.setCookie('user.pwd', this.password, 999);
+        }
+        this.route.navigate(['main']);
+      } else {
+        if (response === "badlogin") {
+          this.errorMessage = "Credentials are not correct - please try again...";
+        } else {
+          // assume response === "error"
+          this.errorMessage = "There was a technical error while logging in";
+        }
+      }
+    });
   }
 }

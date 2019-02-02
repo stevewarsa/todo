@@ -6,8 +6,15 @@
   <button [hidden]="!showAddForm" (click)="showAddForm = false" type="button" class="btn btn-secondary mb-2"><i class="fa fa-minus-square-o"></i> Hide Add Form</button>
   <form [hidden]="!showAddForm" class="form-inline mr-3 mb-2">
     <div class="form-group">
-      <label class="mr-2" for="category">Category:</label>
-      <input type="text" class="form-control" id="category" name="category" [(ngModel)]="todoToAdd.category">
+      <label class="mr-2" for="newcategory">New Category:</label>
+      <input type="text" class="form-control" id="newcategory" name="newcategory" [(ngModel)]="newCategory">
+    </div>
+    <div class="form-group">
+      <label class="mr-2" for="existingcategory">Existing Category:</label>
+      <select class="form-control" id="existingcategory" name="existingcategory" [(ngModel)]="todoToAdd.category">
+        <option value="Default" selected>Default</option>
+        <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
+      </select>
     </div>
     <div class="form-group mr-3">
       <label class="mr-2" for="title">Title:</label>

@@ -13,10 +13,12 @@ export class TodoTableComponent implements OnInit {
   mobile: boolean = false;
   private MAX_LEN: number = 50;
   private currUser: string = null;
+  newCategory: string = null;
   initializing: boolean = false;
   initializingMessage: string = null;
   showAddForm: boolean = false;
   todoToAdd: Todo = new Todo();
+  categories: string[] = [];
   @ViewChild('titleInput') titleInput: ElementRef;
 
   constructor(private databaseService: DatabaseService, private route: Router) {}
@@ -35,7 +37,12 @@ export class TodoTableComponent implements OnInit {
     this.initializingMessage = "Initializing list of TODOs...";
     this.databaseService.getTodos().subscribe((todos: Todo[]) => {
       this.listOfTodos = todos;
-      this.listOfTodos.forEach(td => this.filteredTodos.push(Object.assign({}, td)));
+      this.listOfTodos.forEach(td => {
+        this.filteredTodos.push(Object.assign({}, td));
+        if (!this.categories.includes(td.category)) {
+          this.categories.push(td.category);
+        }
+      });
       this.initializing = false;
     });
   }
@@ -50,9 +57,16 @@ export class TodoTableComponent implements OnInit {
   addTodo() {
     this.initializing = true;
     this.initializingMessage = "Adding new TODO...";
+    // if the new category exists, overwrite the existing category with it
+    if (this.newCategory && this.newCategory.trim().length > 2) {
+      this.todoToAdd.category = this.newCategory.trim();
+    }
     this.databaseService.addTodo(this.todoToAdd).subscribe((returnedTodo: Todo) => {
       this.listOfTodos.push(returnedTodo);
       this.filteredTodos.push(Object.assign({}, returnedTodo));
+      if (!this.categories.includes(returnedTodo.category)) {
+        this.categories.push(returnedTodo.category);
+      }
       this.cleanupAfterAddEditForm();
     });
   }

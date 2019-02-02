@@ -4,18 +4,30 @@
 <div *ngIf="!initializing" class="container">
   <form class="mr-3 mb-2">
     <div class="form-group">
-      <label class="mr-2" for="category">Category:</label>
-      <input type="text" class="form-control" id="category" name="category" [(ngModel)]="todo.category">
+      <label class="mr-2" for="newcategory">New Category:</label>
+      <input type="text" (change)="updateNewCategory($event)" class="form-control" id="newcategory" name="newcategory" [(ngModel)]="newCategory">
+    </div>
+    <div class="form-group">
+      <label class="mr-2" for="existingcategory">Existing Category:</label>
+      <select class="form-control" id="existingcategory" name="existingcategory" [(ngModel)]="todo.category">
+        <option value="NOSELECTION"></option>
+        <option value="Default">Default</option>
+        <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
+      </select>
     </div>
     <div class="form-group mr-3">
       <label class="mr-2" for="title">Title:</label>
       <input type="text" class="form-control" id="title" name="title" [(ngModel)]="todo.title">
     </div>
     <div class="form-group mr-3">
-        <label class="mr-2" for="desc">Description:</label>
-        <textarea class="form-control" name="desc" id="desc" name="desc" cols="20" rows="5" [(ngModel)]="todo.description"></textarea>
-      </div>
-      <button type="button" (click)="updateTodo()" class="btn btn-primary mr-2">Save</button>
-      <button type="button" [routerLink]="['/main']" class="btn btn-secondary">Back</button>
+      <label class="mr-2" for="desc">Description:</label>
+      <textarea class="form-control" name="desc" id="desc" name="desc" cols="20" rows="5" [(ngModel)]="todo.description"></textarea>
+    </div>
+    <div class="form-group mr-3" *ngIf="errorMessage !== null" style="padding: 10px !important;">
+      <font color="red"><b>{{errorMessage}}</b></font>
+    </div>
+    <button type="button" (click)="updateTodo()" class="btn btn-primary mr-2">Save</button>
+    <button type="button" (click)="deleteTodo()" class="btn btn-danger mr-2">Delete</button>
+    <button type="button" [routerLink]="['/main']" class="btn btn-secondary">Back</button>
   </form>
 </div>

@@ -30,8 +30,8 @@ export class DatabaseService {
     return this._editingTodo;
   }
 
-  public doLogin(loginParam: any): Observable<any> {
-    return this.httpService.post(`${this._url}login.php`, loginParam);
+  public doLogin(loginParam: any): Observable<string> {
+    return this.httpService.post<string>(`${this._url}login.php`, loginParam);
   }
 
   public getTodos(): Observable<Todo[]> {
@@ -41,6 +41,10 @@ export class DatabaseService {
     //   DatabaseService.todos.forEach(td => copiedList.push(Object.assign({}, td)));
     //   observer.next(copiedList);
     // });
+  }
+
+  public getCategories(): Observable<string[]> {
+    return this.httpService.get<string[]>(`${this._url}get_categories.php`);
   }
 
   public addTodo(todo: Todo): Observable<Todo> {
@@ -71,5 +75,9 @@ export class DatabaseService {
     //   });
     //   observer.next("success");
     // });
+  }
+
+  public deleteTodo(todo: Todo): Observable<string> {
+    return this.httpService.post<string>(`${this._url}delete_todo.php`, todo);
   }
 }

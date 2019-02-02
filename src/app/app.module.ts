@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ViewEditTodoComponent } from './view-edit-todo/view-edit-todo.component';
+import { ConfirmComponent } from './confirm/confirm.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ViewEditTodoComponent } from './view-edit-todo/view-edit-todo.component
     AppComponent,
     TodoTableComponent,
     LoginComponent,
-    ViewEditTodoComponent
+    ViewEditTodoComponent,
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +28,9 @@ import { ViewEditTodoComponent } from './view-edit-todo/view-edit-todo.component
     NgbModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ConfirmComponent
+  ]
 })
 export class AppModule { }

@@ -15,6 +15,7 @@ error_log("add_todo.php - Received data: id=" . $todo->id . ", category=" . $tod
 $db = new SQLite3('db/todo.sqlite');
 try {
 	$statement = $db->prepare('update TODO set CATEGORY = :category, TITLE = :title, DESCRIPTION = :description, STATUS = :status where ID = :id');
+	$statement->bindValue(':id', $todo->id);
 	$statement->bindValue(':category', $todo->category);
 	$statement->bindValue(':title', $todo->title);
 	$statement->bindValue(':description', $todo->description);
