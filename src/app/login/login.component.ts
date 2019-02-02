@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     //this.showInitializing = true;
-    let cookieUserId: string = CookieUtils.getCookie('user.pwd');
+    let cookieUserId: string = CookieUtils.getCookie('user.id');
     let cookiePassword: string = CookieUtils.getCookie('user.pwd');
     if (cookieUserId && cookiePassword) {
       this.userId = cookieUserId;
