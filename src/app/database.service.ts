@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Todo } from './todo';
+import { TodoParam } from './todo-param';
+import { UserParam } from './user-param';
 
 @Injectable({
   providedIn: 'root'
@@ -34,50 +36,27 @@ export class DatabaseService {
     return this.httpService.post<string>(`${this._url}login.php`, loginParam);
   }
 
-  public getTodos(): Observable<Todo[]> {
-    return this.httpService.get<Todo[]>(`${this._url}get_todos.php`);
-    // return Observable.create(observer => {
-    //   let copiedList: Todo[] = [];
-    //   DatabaseService.todos.forEach(td => copiedList.push(Object.assign({}, td)));
-    //   observer.next(copiedList);
-    // });
+  public getTodos(userParam: UserParam): Observable<Todo[]> {
+    return this.httpService.post<Todo[]>(`${this._url}get_todos.php`, userParam);
   }
 
-  public getCategories(): Observable<string[]> {
-    return this.httpService.get<string[]>(`${this._url}get_categories.php`);
+  public getCategories(userParam: UserParam): Observable<string[]> {
+    return this.httpService.post<string[]>(`${this._url}get_categories.php`, userParam);
   }
 
-  public addTodo(todo: Todo): Observable<Todo> {
-    return this.httpService.post<Todo>(`${this._url}add_todo.php`, todo);
-    // return Observable.create(observer => {
-    //   let newId: number = DatabaseService.todos[DatabaseService.todos.length - 1].id + 1;
-    //   let newTodo: Todo = <Todo>{
-    //     id: newId,
-    //     category: todo.category,
-    //     title: todo.title,
-    //     description: todo.description
-    //   };
-    //   DatabaseService.todos.push(newTodo);
-    //   observer.next(newTodo);
-    // });
+  public getUsers(): Observable<string[]> {
+    return this.httpService.get<string[]>(`${this._url}get_users.php`);
   }
 
-  public editTodo(todo: Todo): Observable<Todo> {
-    return this.httpService.post<Todo>(`${this._url}add_todo.php`, todo);
-    // return Observable.create(observer => {
-    //   DatabaseService.todos.forEach(td => {
-    //     if (td.id === todo.id) {
-    //       td.category = todo.category;
-    //       td.description = todo.description;
-    //       td.status = todo.status;
-    //       td.title = todo.title;
-    //     }
-    //   });
-    //   observer.next("success");
-    // });
+  public addTodo(todoParam: TodoParam): Observable<Todo> {
+    return this.httpService.post<Todo>(`${this._url}add_todo.php`, todoParam);
   }
 
-  public deleteTodo(todo: Todo): Observable<string> {
-    return this.httpService.post<string>(`${this._url}delete_todo.php`, todo);
+  public editTodo(todoParam: TodoParam): Observable<Todo> {
+    return this.httpService.post<Todo>(`${this._url}add_todo.php`, todoParam);
+  }
+
+  public deleteTodo(todoParam: TodoParam): Observable<string> {
+    return this.httpService.post<string>(`${this._url}delete_todo.php`, todoParam);
   }
 }

@@ -14,21 +14,40 @@ export class LoginComponent implements OnInit {
   password: string = null;
   rememberMe = false;
   errorMessage: string = null;
+  users: string[] = [];
+  existingUser: string = "UNKNOWN";
 
   constructor(private databaseService: DatabaseService, private route: Router) { }
 
   ngOnInit() {
-    //this.showInitializing = true;
     let cookieUserId: string = CookieUtils.getCookie('user.id');
     let cookiePassword: string = CookieUtils.getCookie('user.pwd');
     if (cookieUserId && cookiePassword) {
       this.userId = cookieUserId;
       this.password = cookiePassword;
       this.login();
+    } else {
+      this.showInitializing = true;
+      this.databaseService.getUsers().subscribe((users: string[]) => {
+        this.users = users;
+        this.showInitializing = false;
+      });
+    }
+  }
+
+  checkUser(event: any) {
+    let enteredUser: string = event.target.value;
+    if (enteredUser && enteredUser.trim().length > 0) {
+      if (this.users.includes(enteredUser.trim())) {
+        this.existingUser = "TRUE";
+      } else {
+        this.existingUser = "FALSE";
+      }
     }
   }
 
   login() {
+    this.showInitializing = true;
     this.databaseService.doLogin({uid: this.userId, pwd: this.password}).subscribe((response: string) => {
       if (response === "success") {
         this.databaseService.loggedInUser = this.userId;
@@ -41,11 +60,16 @@ export class LoginComponent implements OnInit {
         }
         this.route.navigate(['main']);
       } else {
+        this.showInitializing = false;
         if (response === "badlogin") {
           this.errorMessage = "Credentials are not correct - please try again...";
         } else {
-          // assume response === "error"
-          this.errorMessage = "There was a technical error while logging in";
+          // does response start with "error|"?  If so, message should be following
+          if (response.startsWith("error|")) {
+            this.errorMessage = response.split("|")[1];
+          } else {
+            this.errorMessage = "There was a technical error while logging in";
+          }
         }
       }
     });

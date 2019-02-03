@@ -1,7 +1,9 @@
+import { TodoParam } from './../todo-param';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { Router } from '@angular/router';
 import { Todo } from '../todo';
+import { UserParam } from '../user-param';
 
 @Component({
   templateUrl: './todo-table.component.html',
@@ -35,14 +37,20 @@ export class TodoTableComponent implements OnInit {
     }
     this.initializing = true;
     this.initializingMessage = "Initializing list of TODOs...";
-    this.databaseService.getTodos().subscribe((todos: Todo[]) => {
-      this.listOfTodos = todos;
-      this.listOfTodos.forEach(td => {
-        this.filteredTodos.push(Object.assign({}, td));
-        if (!this.categories.includes(td.category)) {
-          this.categories.push(td.category);
+    this.databaseService.getTodos(<UserParam>{uid: this.currUser}).subscribe((todos: any) => {
+      if (typeof todos === 'string') {
+        if (todos.startsWith("error|")) {
+          console.log(todos.split("|")[1]);
         }
-      });
+      } else {
+        this.listOfTodos = todos;
+        this.listOfTodos.forEach(td => {
+          this.filteredTodos.push(Object.assign({}, td));
+          if (!this.categories.includes(td.category)) {
+            this.categories.push(td.category);
+          }
+        });
+      }
       this.initializing = false;
     });
   }
@@ -61,11 +69,17 @@ export class TodoTableComponent implements OnInit {
     if (this.newCategory && this.newCategory.trim().length > 2) {
       this.todoToAdd.category = this.newCategory.trim();
     }
-    this.databaseService.addTodo(this.todoToAdd).subscribe((returnedTodo: Todo) => {
-      this.listOfTodos.push(returnedTodo);
-      this.filteredTodos.push(Object.assign({}, returnedTodo));
-      if (!this.categories.includes(returnedTodo.category)) {
-        this.categories.push(returnedTodo.category);
+    this.databaseService.addTodo(<TodoParam>{uid: this.currUser,todo: this.todoToAdd}).subscribe((returnedTodo: any) => {
+      if (typeof returnedTodo === 'string') {
+        if (returnedTodo.startsWith("error|")) {
+          console.log(returnedTodo.split("|")[1]);
+        }
+      } else {
+        this.listOfTodos.push(returnedTodo);
+        this.filteredTodos.push(Object.assign({}, returnedTodo));
+        if (!this.categories.includes(returnedTodo.category)) {
+          this.categories.push(returnedTodo.category);
+        }
       }
       this.cleanupAfterAddEditForm();
     });

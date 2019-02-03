@@ -20,7 +20,7 @@
           <div class="form-group">
             <label for="userId" class="col-md col-sm control-label">User ID:</label>
             <div class="col-md col-sm">
-              <input type="text" maxlength="20" class="form-control" [(ngModel)]="userId" id="userId" name="userId" placeholder="Enter User ID" autofocus>
+              <input type="text" (change)="checkUser($event)" maxlength="20" class="form-control" [(ngModel)]="userId" id="userId" name="userId" placeholder="Enter User ID" autofocus>
             </div>
           </div>
           <div class="form-group">
@@ -31,7 +31,8 @@
           </div>
           <div class="form-group">
             <div class="col-md col-sm col-md-offset-2 col-sm-offset-2">
-              <button [disabled]="!password || password.trim() === ''" type="button" class="btn btn-primary btn-block" (click)="login()">Login</button>
+              <button [hidden]="existingUser === 'FALSE'" [disabled]="!password || password.trim() === ''" type="button" class="btn btn-primary btn-block" (click)="login()">Login</button>
+              <button [hidden]="existingUser === 'TRUE' || existingUser === 'UNKNOWN'" [disabled]="!password || password.trim() === ''" type="button" class="btn btn-primary btn-block" (click)="login()">Create New Account</button>
             </div>
           </div>
           <div class="form-group">

@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { Router } from '@angular/router';
 import { Todo } from '../todo';
+import { UserParam } from '../user-param';
+import { TodoParam } from '../todo-param';
 
 @Component({
   templateUrl: './view-edit-todo.component.html',
@@ -29,8 +31,14 @@ export class ViewEditTodoComponent implements OnInit {
     this.todo = this.databaseService.editingTodo;
     this.initializing = true;
     this.initializingMessage = "Retrieving categories...";
-    this.databaseService.getCategories().subscribe((categories: string[]) => {
-      this.categories = categories;
+    this.databaseService.getCategories(<UserParam>{uid: this.currentUser}).subscribe((categories:any) => {
+      if (typeof categories === 'string') {
+        if (categories.startsWith("error|")) {
+          console.log(categories.split("|")[1]);
+        }
+      } else {
+        this.categories = categories;
+      }
       this.initializing = false;
       this.initializingMessage = null;
     });
@@ -52,10 +60,17 @@ export class ViewEditTodoComponent implements OnInit {
     if (this.newCategory && this.newCategory.trim().length > 2) {
       this.todo.category = this.newCategory.trim();
     }
-    this.databaseService.editTodo(this.todo).subscribe((todo: Todo) => {
+    this.databaseService.editTodo(<TodoParam>{uid: this.currentUser, todo: this.todo}).subscribe((todo: any) => {
+      if (typeof todo === 'string') {
+        if (todo.startsWith("error|")) {
+          console.log(todo.split("|")[1]);
+          this.errorMessage = todo.split("|")[1];
+        }
+      } else {
+        this.route.navigate(['main']);
+      }
       this.initializing = false;
       this.initializingMessage = null;
-      this.route.navigate(['main']);
     });
   }
 
@@ -64,14 +79,19 @@ export class ViewEditTodoComponent implements OnInit {
       // user answered yes
       this.initializing = true;
       this.initializingMessage = "Deleting current to TODO...";
-      this.databaseService.deleteTodo(this.todo).subscribe((response: string) => {
+      this.databaseService.deleteTodo(<TodoParam>{uid: this.currentUser, todo: this.todo}).subscribe((response: string) => {
         if (response === "success") {
           this.initializing = false;
           this.initializingMessage = null;
           this.route.navigate(['main']);
         } else {
-          // assume response === "error"
-          this.errorMessage = "There was an error deleting this item...";
+          // does response start with "error|"?  If so, error message is following
+          if (response.startsWith("error|")) {
+            console.log(response.split("|")[1]);
+            this.errorMessage = response.split("|")[1];
+          } else {
+            this.errorMessage = "There was an error deleting this item...";
+          }
         }
       });
     },
