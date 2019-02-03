@@ -5,11 +5,19 @@ header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, X-Requ
 header('Content-Type: application/json; charset=utf8; Accept: application/json');
 
 $request = file_get_contents('php://input');
+if (empty($request)) {
+	error_log("get_todos.php - may be options call - JSON request not sent - exiting");
+	exit();
+}
 error_log("get_todos.php - Here is the JSON received: ");
 error_log($request);
 $userParam = json_decode($request);
+if (empty($userParam) || empty($userParam->uid)) {
+	error_log("get_todos.php - may be options call - userParam or userParam->uid not sent - exiting");
+	exit();
+}
 $db = null;
-$filename = 'db/todo_' . $loginParam->uid . '.sqlite';
+$filename = 'db/todo_' . $userParam->uid . '.sqlite';
 if (file_exists($filename)) {
 	$db = new SQLite3('db/todo_' . $userParam->uid . '.sqlite');
 	$results = $db->query('SELECT ID, CATEGORY, TITLE, DESCRIPTION, STATUS from TODO ORDER BY ID');
@@ -30,7 +38,7 @@ if (file_exists($filename)) {
 	print_r(json_encode($todos));
 } else {
 	error_log("get_todos.php - No database file " . $filename);
-	print_r(json_encode("error|There is no database for user " . $loginParam->uid));
+	print_r(json_encode("error|There is no database for user " . $userParam->uid));
 }
 ?>
 

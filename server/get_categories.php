@@ -5,6 +5,10 @@ header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, X-Requ
 header('Content-Type: application/json; charset=utf8; Accept: application/json');
 
 $request = file_get_contents('php://input');
+if (empty($request)) {
+	error_log("get_categories.php - may be options call - JSON request not sent - exiting");
+	exit();
+}
 error_log("get_categories.php - Here is the JSON received: ");
 error_log($request);
 $userParam = json_decode($request);
