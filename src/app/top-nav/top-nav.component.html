@@ -1,0 +1,23 @@
+<nav [hidden]="!currentUser" class="navbar navbar-expand-md navbar-light">
+  <span *ngIf="mobile" style="font-size: 1.5em; font-weight: bold; color: darkgreen;"> User:
+    {{currentUser}}</span>
+  <button class="navbar-toggler" (click)="toggleExpanded()" [attr.aria-expanded]="!isCollapsed" type="button"
+    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-collapse collapse justify-content-center" id="collapsingNavbar" [ngbCollapse]="isCollapsed">
+    <ul class="navbar-nav mx-auto">
+      <li [hidden]="currentRoute === '/main'" class="nav-item">
+        <a class="nav-link" (click)="toggleExpanded()" [routerLink]="['main']">TODO List</a>
+      </li>
+      <li [hidden]="currentRoute === '/deletedItems'" class="nav-item">
+        <a class="nav-link" (click)="toggleExpanded()" [routerLink]="['deletedItems']">Deleted Items</a>
+      </li>
+      <li *ngIf="currentUser" class="nav-item link">
+        <a class="nav-link" (click)="doLogout()">Logout</a>
+      </li>
+    </ul>
+  </div>
+  <span *ngIf="!mobile" style="font-size: 18px; font-weight: bold; color: darkgreen;"> User:
+    {{currentUser}}</span>
+</nav>

@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ViewEditTodoComponent } from './view-edit-todo/view-edit-todo.component';
 import { ConfirmComponent } from './confirm/confirm.component';
+import { TopNavComponent } from './top-nav/top-nav.component';
+import { DeletedItemsComponent } from './deleted-items/deleted-items.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { ConfirmComponent } from './confirm/confirm.component';
     TodoTableComponent,
     LoginComponent,
     ViewEditTodoComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    TopNavComponent,
+    DeletedItemsComponent
   ],
   imports: [
     BrowserModule,

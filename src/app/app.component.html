@@ -1,6 +1,7 @@
-<div [hidden]="!currUser" class="container">
+<td-top-nav></td-top-nav> 
+<div [hidden]="!currUser || currentRoute === '/deletedItems'" class="container">
   <h3>
-    TODO's for {{currUser}}
+    TODO List
   </h3>
 </div>
 <router-outlet></router-outlet>

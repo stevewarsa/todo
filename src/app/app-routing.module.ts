@@ -1,3 +1,4 @@
+import { DeletedItemsComponent } from './deleted-items/deleted-items.component';
 import { ViewEditTodoComponent } from './view-edit-todo/view-edit-todo.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -7,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 const routes: Routes = [
   {path: '', component: LoginComponent},
   {path: 'view', component: ViewEditTodoComponent},
+  {path: 'deletedItems', component: DeletedItemsComponent},
   {path: 'main', component: TodoTableComponent}
 ];
 

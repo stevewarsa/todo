@@ -1,0 +1,31 @@
+<div *ngIf="initializing" class="container">
+  {{initializingMessage}}
+</div>
+<div *ngIf="!initializing" class="container">
+  <div class="row">
+    <input [(ngModel)]="filterText" type="text" class="form-control col m-2" placeholder="Filter entries" (keyup)="filterItems($event)">
+    <select [(ngModel)]="filterCategory" class="form-control col m-2" id="filterCategory" name="filterCategory" (change)="onFilterCategory($event.target.value)">
+      <option value="NOSELECTION"></option>
+      <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
+    </select>
+  </div>
+  <table class="table table-condensed table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Cat</th>
+        <th>Title</th>
+        <th>Desc</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let todo of filteredTodos">
+        <td>{{todo.category}}</td>
+        <td>{{todo.title}}</td>
+        <td placement="left" [ngbTooltip]="todo.description">{{todo.description ? shorten(todo.description) : "(No
+          Desc)" }}</td>
+        <td>{{todo.dateDeleted}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

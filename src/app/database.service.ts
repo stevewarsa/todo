@@ -40,6 +40,10 @@ export class DatabaseService {
     return this.httpService.post<Todo[]>(`${this._url}get_todos.php`, userParam);
   }
 
+  public getDeletedTodos(userParam: UserParam): Observable<Todo[]> {
+    return this.httpService.post<Todo[]>(`${this._url}get_deleted_todos.php`, userParam);
+  }
+
   public getCategories(userParam: UserParam): Observable<string[]> {
     return this.httpService.post<string[]>(`${this._url}get_categories.php`, userParam);
   }
