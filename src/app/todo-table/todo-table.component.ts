@@ -13,6 +13,7 @@ export class TodoTableComponent implements OnInit {
   listOfTodos: Todo[] = [];
   filteredTodos: Todo[] = [];
   filterText: string = null;
+  filterCategory: string = "NOSELECTION";
   mobile: boolean = false;
   private MAX_LEN: number = 50;
   private currUser: string = null;
@@ -106,6 +107,7 @@ export class TodoTableComponent implements OnInit {
 
   filterItems(event: any) {
     let searchString = event.target.value.toUpperCase();
+    this.filterCategory = "NOSELECTION";
     this.filteredTodos = this.listOfTodos.filter(td => {
       for (let field of ["category", "title", "description"]) {
         if (td[field] && td[field].toUpperCase().includes(searchString)) {
@@ -117,10 +119,9 @@ export class TodoTableComponent implements OnInit {
   }
 
   onFilterCategory(category: string) {
-    if (category === "NOSELECTION") {
-      this.filteredTodos = [];
-      this.listOfTodos.forEach(td => this.filteredTodos.push(Object.assign({}, td)));
-    } else {
+    this.filteredTodos = [];
+    this.listOfTodos.forEach(td => this.filteredTodos.push(Object.assign({}, td)));
+    if (category !== "NOSELECTION") {
       this.filteredTodos = this.filteredTodos.filter(td => {
         return td.category === category;
       });

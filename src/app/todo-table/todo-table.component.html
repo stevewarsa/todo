@@ -27,7 +27,7 @@
   </form>
   <div class="row">
     <input [(ngModel)]="filterText" type="text" class="form-control col m-2" placeholder="Filter entries" (keyup)="filterItems($event)">
-    <select class="form-control col m-2" id="filterCategory" name="filterCategory" (change)="onFilterCategory($event.target.value)">
+    <select [(ngModel)]="filterCategory" class="form-control col m-2" id="filterCategory" name="filterCategory" (change)="onFilterCategory($event.target.value)">
       <option value="NOSELECTION"></option>
       <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
     </select>
