@@ -4,7 +4,7 @@
 <div *ngIf="!initializing" class="container">
   <button [hidden]="showAddForm" (click)="viewAddForm()" type="button" class="btn btn-secondary mb-2"><i class="fa fa-plus-square"></i> Show Add Form</button>
   <button [hidden]="!showAddForm" (click)="showAddForm = false" type="button" class="btn btn-secondary mb-2"><i class="fa fa-minus-square-o"></i> Hide Add Form</button>
-  <form [hidden]="!showAddForm" class="form-inline mr-3 mb-2">
+  <form [hidden]="!showAddForm" class="mr-3 mb-2">
     <div class="form-group">
       <label class="mr-2" for="newcategory">New Category:</label>
       <input type="text" class="form-control" id="newcategory" name="newcategory" [(ngModel)]="newCategory">
@@ -12,7 +12,6 @@
     <div class="form-group">
       <label class="mr-2" for="existingcategory">Existing Category:</label>
       <select class="form-control" id="existingcategory" name="existingcategory" [(ngModel)]="todoToAdd.category">
-        <option value="Default" selected>Default</option>
         <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
       </select>
     </div>
@@ -26,7 +25,13 @@
       </div>
       <button type="button" (click)="addTodo()" class="btn btn-primary">{{editingTodo ? 'Save Changes to ' : 'Add '}} TODO</button>
   </form>
-  <input type="text" class="form-control input-lg" placeholder="Filter entries" (keyup)="filterItems($event)">
+  <div class="row">
+    <input [(ngModel)]="filterText" type="text" class="form-control col m-2" placeholder="Filter entries" (keyup)="filterItems($event)">
+    <select class="form-control col m-2" id="filterCategory" name="filterCategory" (change)="onFilterCategory($event.target.value)">
+      <option value="NOSELECTION"></option>
+      <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
+    </select>
+  </div>
   <table class="table table-condensed table-striped table-bordered">
     <thead>
       <tr>

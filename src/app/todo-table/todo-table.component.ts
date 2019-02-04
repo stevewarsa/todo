@@ -12,6 +12,7 @@ import { UserParam } from '../user-param';
 export class TodoTableComponent implements OnInit {
   listOfTodos: Todo[] = [];
   filteredTodos: Todo[] = [];
+  filterText: string = null;
   mobile: boolean = false;
   private MAX_LEN: number = 50;
   private currUser: string = null;
@@ -43,13 +44,17 @@ export class TodoTableComponent implements OnInit {
           console.log(todos.split("|")[1]);
         }
       } else {
-        this.listOfTodos = todos;
+        this.listOfTodos = (todos as Todo[]).sort((a: Todo, b: Todo) => {
+          return b.id - a.id;
+        });
+        let tmpCategories: string[] = [];
         this.listOfTodos.forEach(td => {
           this.filteredTodos.push(Object.assign({}, td));
-          if (!this.categories.includes(td.category)) {
-            this.categories.push(td.category);
+          if (!tmpCategories.includes(td.category)) {
+            tmpCategories.push(td.category);
           }
         });
+        this.categories = tmpCategories.sort();
       }
       this.initializing = false;
     });
@@ -109,6 +114,17 @@ export class TodoTableComponent implements OnInit {
       }
       return false;
     });
+  }
+
+  onFilterCategory(category: string) {
+    if (category === "NOSELECTION") {
+      this.filteredTodos = [];
+      this.listOfTodos.forEach(td => this.filteredTodos.push(Object.assign({}, td)));
+    } else {
+      this.filteredTodos = this.filteredTodos.filter(td => {
+        return td.category === category;
+      });
+    }
   }
 
   shorten(description: string): string {

@@ -11,7 +11,6 @@
       <label class="mr-2" for="existingcategory">Existing Category:</label>
       <select class="form-control" id="existingcategory" name="existingcategory" [(ngModel)]="todo.category">
         <option value="NOSELECTION"></option>
-        <option value="Default">Default</option>
         <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
       </select>
     </div>
