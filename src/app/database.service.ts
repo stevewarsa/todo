@@ -36,6 +36,10 @@ export class DatabaseService {
     return this.httpService.post<string>(`${this._url}login.php`, loginParam);
   }
 
+  public changePassword(changePasswordParam: any): Observable<string> {
+    return this.httpService.post<string>(`${this._url}change_password.php`, changePasswordParam);
+  }
+
   public getTodos(userParam: UserParam): Observable<Todo[]> {
     return this.httpService.post<Todo[]>(`${this._url}get_todos.php`, userParam);
   }

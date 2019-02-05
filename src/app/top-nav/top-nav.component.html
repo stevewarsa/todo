@@ -13,6 +13,9 @@
       <li [hidden]="currentRoute === '/deletedItems'" class="nav-item">
         <a class="nav-link" (click)="toggleExpanded()" [routerLink]="['deletedItems']">Deleted Items</a>
       </li>
+      <li [hidden]="currentRoute === '/changePassword'" class="nav-item">
+        <a class="nav-link" (click)="toggleExpanded()" [routerLink]="['changePassword']">Change Password</a>
+      </li>
       <li *ngIf="currentUser" class="nav-item link">
         <a class="nav-link" (click)="doLogout()">Logout</a>
       </li>

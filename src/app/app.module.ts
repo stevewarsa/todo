@@ -12,6 +12,7 @@ import { ViewEditTodoComponent } from './view-edit-todo/view-edit-todo.component
 import { ConfirmComponent } from './confirm/confirm.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
 import { DeletedItemsComponent } from './deleted-items/deleted-items.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { DeletedItemsComponent } from './deleted-items/deleted-items.component';
     ViewEditTodoComponent,
     ConfirmComponent,
     TopNavComponent,
-    DeletedItemsComponent
+    DeletedItemsComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
