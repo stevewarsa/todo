@@ -81,10 +81,11 @@ export class TodoTableComponent implements OnInit {
           console.log(returnedTodo.split("|")[1]);
         }
       } else {
-        this.listOfTodos.push(returnedTodo);
-        this.filteredTodos.push(Object.assign({}, returnedTodo));
+        this.listOfTodos.unshift(returnedTodo);
+        this.filteredTodos.unshift(Object.assign({}, returnedTodo));
         if (!this.categories.includes(returnedTodo.category)) {
           this.categories.push(returnedTodo.category);
+          this.categories = this.categories.sort();
         }
       }
       this.cleanupAfterAddEditForm();
