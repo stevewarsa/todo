@@ -4,6 +4,7 @@ import { DatabaseService } from '../database.service';
 import { Router } from '@angular/router';
 import { Todo } from '../todo';
 import { UserParam } from '../user-param';
+import { forkJoin } from 'rxjs';
 
 @Component({
   templateUrl: './todo-table.component.html',
@@ -20,6 +21,7 @@ export class TodoTableComponent implements OnInit {
   newCategory: string = null;
   initializing: boolean = false;
   initializingMessage: string = null;
+  errorMessage: string = null;
   showAddForm: boolean = false;
   todoToAdd: Todo = new Todo();
   categories: string[] = [];
@@ -39,26 +41,38 @@ export class TodoTableComponent implements OnInit {
     }
     this.initializing = true;
     this.initializingMessage = "Initializing list of TODOs...";
-    this.databaseService.getTodos(<UserParam>{uid: this.currUser}).subscribe((todos: any) => {
+    let catObs = this.databaseService.getCategories(<UserParam>{uid: this.currUser});
+    let tdObs = this.databaseService.getTodos(<UserParam>{uid: this.currUser});
+    forkJoin([catObs, tdObs]).subscribe((response: any[]) => {
+      let cats = response[0];
+      if (typeof cats === 'string') {
+        if (cats.startsWith("error|")) {
+          console.log(cats.split("|")[1]);
+          this.errorMessage = cats.split("|")[1];
+        }
+      } else {
+        if (!cats.includes("Default")) {
+          cats.push("Default");
+        }
+        this.categories = cats.sort();
+      }
+      let todos = response[1];
       if (typeof todos === 'string') {
         if (todos.startsWith("error|")) {
           console.log(todos.split("|")[1]);
+          if (this.errorMessage) {
+            this.errorMessage += ", " + todos.split("|")[1];
+          } else {
+            this.errorMessage = todos.split("|")[1];
+          }
         }
       } else {
         this.listOfTodos = (todos as Todo[]).sort((a: Todo, b: Todo) => {
           return b.id - a.id;
         });
-        let tmpCategories: string[] = [];
         this.listOfTodos.forEach(td => {
           this.filteredTodos.push(Object.assign({}, td));
-          if (!tmpCategories.includes(td.category)) {
-            tmpCategories.push(td.category);
-          }
         });
-        if (!tmpCategories.includes("Default")) {
-          tmpCategories.push("Default");
-        }
-        this.categories = tmpCategories.sort();
       }
       this.initializing = false;
     });
