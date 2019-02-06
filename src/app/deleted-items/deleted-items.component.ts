@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Todo } from '../todo';
 import { Router } from '@angular/router';
 import { UserParam } from '../user-param';
+import * as moment from 'moment';
 
 @Component({
   templateUrl: './deleted-items.component.html',
@@ -43,6 +44,7 @@ export class DeletedItemsComponent implements OnInit {
           console.log(todos.split("|")[1]);
         }
       } else {
+        this.updateDateFromUTCToLocal(todos);
         this.listOfTodos = todos;
         let tmpCategories: string[] = [];
         this.listOfTodos.forEach(td => {
@@ -54,6 +56,16 @@ export class DeletedItemsComponent implements OnInit {
         this.categories = tmpCategories.sort();
       }
       this.initializing = false;
+    });
+  }
+
+  private updateDateFromUTCToLocal(todos: Todo[]) {
+    todos.forEach(td => {
+      if (td.hasOwnProperty('dateDeleted') && td['dateDeleted']) {
+        let offset: number = moment().utcOffset();
+        let localDt: string = moment.utc(td['dateDeleted']).utcOffset(offset).format('ddd, MMM D, YYYY h:mm A');
+        td['dateDeleted'] = localDt;
+      }
     });
   }
 
