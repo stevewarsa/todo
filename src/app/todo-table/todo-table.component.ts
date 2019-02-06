@@ -55,6 +55,9 @@ export class TodoTableComponent implements OnInit {
             tmpCategories.push(td.category);
           }
         });
+        if (!tmpCategories.includes("Default")) {
+          tmpCategories.push("Default");
+        }
         this.categories = tmpCategories.sort();
       }
       this.initializing = false;
