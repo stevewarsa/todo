@@ -80,6 +80,10 @@ export class TodoTableComponent implements OnInit {
 
   viewAddForm() {
     this.showAddForm = true;
+    this.newCategory = null;
+    this.todoToAdd.title = null;
+    this.todoToAdd.category = "Default";
+    this.todoToAdd.description = null;
     setTimeout(() => {
       this.titleInput.nativeElement.focus();
     }, 100);
