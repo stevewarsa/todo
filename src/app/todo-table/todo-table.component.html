@@ -23,7 +23,7 @@
         <label class="mr-2" for="desc">Description:</label>
         <textarea class="form-control" name="desc" id="desc" name="desc" cols="20" rows="4" [(ngModel)]="todoToAdd.description"></textarea>
       </div>
-      <button type="button" (click)="addTodo()" class="btn btn-primary">{{editingTodo ? 'Save Changes to ' : 'Add '}} TODO</button>
+      <button [disabled]="!todoToAdd || !todoToAdd.title || todoToAdd.title.trim().length === 0" type="button" (click)="addTodo()" class="btn btn-primary">{{editingTodo ? 'Save Changes to ' : 'Add '}} TODO</button>
   </form>
   <div class="row">
     <input [(ngModel)]="filterText" type="text" class="form-control col m-2" placeholder="Filter entries" (keyup)="filterItems($event)">

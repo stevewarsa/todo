@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,11 +11,16 @@ import { UserParam } from './user-param';
 })
 export class DatabaseService {
   private _loggedInUser: string = null;
-  private _url: string = "http://ps11911.com/todo/server/";
+  private _url: string = "http://localhost:8080/todo/server/";
 
   private _editingTodo: Todo = null;
 
-  constructor(private httpService: HttpClient) { }
+  constructor(private httpService: HttpClient) { 
+    if (environment.production) {
+      this._url = "/todo/server/";
+    }
+    console.log("Using url: " + this._url);
+  }
 
   public set loggedInUser(user: string) {
     this._loggedInUser = user;
