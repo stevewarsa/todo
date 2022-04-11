@@ -1,10 +1,10 @@
-import { TodoParam } from './../todo-param';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { DatabaseService } from '../database.service';
-import { Router } from '@angular/router';
-import { Todo } from '../todo';
-import { UserParam } from '../user-param';
-import { forkJoin } from 'rxjs';
+import {TodoParam} from '../todo-param';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {DatabaseService} from '../database.service';
+import {Router} from '@angular/router';
+import {Todo} from '../todo';
+import {UserParam} from '../user-param';
+import {forkJoin} from 'rxjs';
 
 @Component({
   templateUrl: './todo-table.component.html',
@@ -26,6 +26,8 @@ export class TodoTableComponent implements OnInit {
   todoToAdd: Todo = new Todo();
   categories: string[] = [];
   @ViewChild('titleInput') titleInput: ElementRef;
+  filterPriority: number = -1;
+  prioritySort: boolean = false;
 
   constructor(private databaseService: DatabaseService, private route: Router) {}
 
@@ -67,14 +69,18 @@ export class TodoTableComponent implements OnInit {
           }
         }
       } else {
-        this.listOfTodos = (todos as Todo[]).sort((a: Todo, b: Todo) => {
-          return b.id - a.id;
-        });
-        this.listOfTodos.forEach(td => {
-          this.filteredTodos.push(Object.assign({}, td));
-        });
+        this.doDefaultSort(todos);
       }
       this.initializing = false;
+    });
+  }
+
+  private doDefaultSort(todos) {
+    this.listOfTodos = (todos as Todo[]).sort((a: Todo, b: Todo) => {
+      return b.id - a.id;
+    });
+    this.listOfTodos.forEach(td => {
+      this.filteredTodos.push(Object.assign({}, td));
     });
   }
 
@@ -122,32 +128,18 @@ export class TodoTableComponent implements OnInit {
 
   editTodo(td: Todo) {
     // clone it...
-    let toEdit: Todo = Object.assign({}, td);
-    this.databaseService.editingTodo = toEdit;
+    this.databaseService.editingTodo = Object.assign({}, td);
     this.route.navigate(['view']);
   }
 
   filterItems(event: any) {
-    let searchString = event.target.value.toUpperCase();
-    this.filterCategory = "NOSELECTION";
-    this.filteredTodos = this.listOfTodos.filter(td => {
-      for (let field of ["category", "title", "description"]) {
-        if (td[field] && td[field].toUpperCase().includes(searchString)) {
-          return true;
-        }
-      }
-      return false;
-    });
+    this.filterText = event.target.value.toUpperCase();
+    this.doFilter();
   }
 
-  onFilterCategory(category: string) {
-    this.filteredTodos = [];
-    this.listOfTodos.forEach(td => this.filteredTodos.push(Object.assign({}, td)));
-    if (category !== "NOSELECTION") {
-      this.filteredTodos = this.filteredTodos.filter(td => {
-        return td.category === category;
-      });
-    }
+  onFilterCategory(evt: any) {
+    this.filterCategory = evt.target.value;
+    this.doFilter();
   }
 
   shorten(description: string): string {
@@ -155,6 +147,49 @@ export class TodoTableComponent implements OnInit {
       return description.substring(0, this.MAX_LEN - 3) + "...";
     } else {
       return description;
+    }
+  }
+
+  onFilterPriority(evt: any) {
+    this.filterPriority = parseInt(evt.target.value);
+    this.doFilter();
+  }
+
+  private doFilter() {
+    let locFilteredTodos = [];
+    this.listOfTodos.forEach(td => locFilteredTodos.push(Object.assign({}, td)));
+    if (this.filterText && this.filterText.trim() !== "") {
+      locFilteredTodos = locFilteredTodos.filter(td => {
+        for (let field of ["category", "title", "description"]) {
+          if (td[field] && td[field].toUpperCase().includes(this.filterText)) {
+            return true;
+          }
+        }
+        return false;
+      });
+    }
+    if (this.filterCategory && this.filterCategory !== "NOSELECTION") {
+      locFilteredTodos = locFilteredTodos.filter(td => {
+        return td.category === this.filterCategory;
+      });
+    }
+    if (this.filterPriority !== -1) {
+      locFilteredTodos = locFilteredTodos.filter(td => {
+        return td.priority === this.filterPriority;
+      });
+    }
+    this.filteredTodos = locFilteredTodos;
+  }
+
+  doSort() {
+    if (this.prioritySort) {
+      // clear sort
+      this.prioritySort = false;
+      this.filteredTodos = [];
+      this.doDefaultSort(this.listOfTodos);
+    } else {
+      this.prioritySort = true;
+      this.filteredTodos = this.filteredTodos.sort((a, b) => a.priority - b.priority);
     }
   }
 }

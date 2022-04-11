@@ -1,10 +1,10 @@
-import { ModalHelperService } from './../modal-helper.service';
-import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from '../database.service';
-import { Router } from '@angular/router';
-import { Todo } from '../todo';
-import { UserParam } from '../user-param';
-import { TodoParam } from '../todo-param';
+import {ModalHelperService} from '../modal-helper.service';
+import {Component, OnInit} from '@angular/core';
+import {DatabaseService} from '../database.service';
+import {Router} from '@angular/router';
+import {Todo} from '../todo';
+import {UserParam} from '../user-param';
+import {TodoParam} from '../todo-param';
 
 @Component({
   templateUrl: './view-edit-todo.component.html',
@@ -18,6 +18,7 @@ export class ViewEditTodoComponent implements OnInit {
   errorMessage: string = null;
   categories: string[] = [];
   newCategory: string = null;
+  pi = parseInt;
 
   constructor(private databaseService: DatabaseService, private route: Router, private modalHelperService: ModalHelperService) { }
 
@@ -75,7 +76,7 @@ export class ViewEditTodoComponent implements OnInit {
   }
 
   deleteTodo() {
-    this.modalHelperService.confirm({message: "Delete this TODO?"}).result.then((value: any) => {
+    this.modalHelperService.confirm({message: "Delete this TODO?"}).result.then(() => {
       // user answered yes
       this.initializing = true;
       this.initializingMessage = "Deleting current to TODO...";
@@ -99,5 +100,9 @@ export class ViewEditTodoComponent implements OnInit {
       // user answered no
       console.log("User chose not to save data...");
     });
+  }
+
+  updatePriority(evt: any) {
+    this.todo.priority = parseInt(evt.target.value);
   }
 }

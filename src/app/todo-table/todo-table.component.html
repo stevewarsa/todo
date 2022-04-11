@@ -2,8 +2,11 @@
   {{initializingMessage}}
 </div>
 <div *ngIf="!initializing" class="container">
-  <button [hidden]="showAddForm" (click)="viewAddForm()" type="button" class="btn btn-secondary mb-2"><i class="fa fa-plus-square"></i> Show Add Form</button>
-  <button [hidden]="!showAddForm" (click)="showAddForm = false" type="button" class="btn btn-secondary mb-2"><i class="fa fa-minus-square-o"></i> Hide Add Form</button>
+  <button [hidden]="showAddForm" (click)="viewAddForm()" type="button" class="btn btn-secondary mb-2"><i class="fa fa-plus-square"></i> Show Add Form
+  </button>
+  <button [hidden]="!showAddForm" (click)="showAddForm = false" type="button" class="btn btn-secondary mb-2"><i
+    class="fa fa-minus-square-o"></i> Hide Add Form
+  </button>
   <form [hidden]="!showAddForm" class="mr-3 mb-2">
     <div class="form-group">
       <label class="mr-2" for="newcategory">New Category:</label>
@@ -15,38 +18,52 @@
         <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
       </select>
     </div>
+    <div class="form-group">
+      <label class="mr-2" for="existingcategory">Priority (1 is highest):</label>
+      <select class="form-control" id="priority" name="priority" [(ngModel)]="todoToAdd.priority">
+        <option *ngFor="let item of [].constructor(10); let i = index" value="{{i + 1}}">{{i + 1}}</option>
+      </select>
+    </div>
     <div class="form-group mr-3">
       <label class="mr-2" for="title">Title:</label>
       <input #titleInput type="text" class="form-control" id="title" name="title" [(ngModel)]="todoToAdd.title">
     </div>
     <div class="form-group mr-3">
-        <label class="mr-2" for="desc">Description:</label>
-        <textarea class="form-control" name="desc" id="desc" name="desc" cols="20" rows="4" [(ngModel)]="todoToAdd.description"></textarea>
-      </div>
-      <button [disabled]="!todoToAdd || !todoToAdd.title || todoToAdd.title.trim().length === 0" type="button" (click)="addTodo()" class="btn btn-primary">{{editingTodo ? 'Save Changes to ' : 'Add '}} TODO</button>
+      <label class="mr-2" for="desc">Description:</label>
+      <textarea class="form-control" id="desc" name="desc" cols="20" rows="4"
+                [(ngModel)]="todoToAdd.description"></textarea>
+    </div>
+    <button [disabled]="!todoToAdd || !todoToAdd.title || todoToAdd.title.trim().length === 0" type="button"
+            (click)="addTodo()" class="btn btn-primary">Add TODO
+    </button>
   </form>
   <div class="row">
-    <input [(ngModel)]="filterText" type="text" class="form-control col m-2" placeholder="Filter entries" (keyup)="filterItems($event)">
-    <select [(ngModel)]="filterCategory" class="form-control col m-2" id="filterCategory" name="filterCategory" (change)="onFilterCategory($event.target.value)">
-      <option value="NOSELECTION"></option>
+    <input [(ngModel)]="filterText" type="text" class="form-control col m-2" placeholder="Filter entries"
+           (keyup)="filterItems($event)">
+    <select [(ngModel)]="filterCategory" class="form-control col m-2" id="filterCategory" name="filterCategory"
+            (change)="onFilterCategory($event)">
+      <option value="NOSELECTION">All Categories</option>
       <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
+    </select>
+    <select class="form-control col m-2" id="priorityFilter" name="priorityFilter" (change)="onFilterPriority($event)" [(ngModel)]="filterPriority">
+      <option value="-1">All Priorities</option>
+      <option *ngFor="let item of [].constructor(10); let i = index" value="{{i + 1}}">Priority {{i + 1}}</option>
     </select>
   </div>
   <table class="table table-condensed table-striped table-bordered">
     <thead>
-      <tr>
-        <th>Category</th>
-        <th>Title</th>
-        <th>Description</th>
-      </tr>
+    <tr>
+      <th>Cat</th>
+      <th>Title</th>
+      <th>Pri <i class="fa fa-sort-desc" (click)="doSort()"></i></th>
+    </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let todo of filteredTodos">
-        <td>{{todo.category}}</td>
-        <td><a (click)="editTodo(todo)">{{todo.title}}</a></td>
-        <td placement="left" [ngbTooltip]="todo.description">{{todo.description ? shorten(todo.description) : "(No
-          Description)" }}</td>
-      </tr>
+    <tr *ngFor="let todo of filteredTodos">
+      <td>{{todo.category}}</td>
+      <td><a (click)="editTodo(todo)">{{todo.title}}</a></td>
+      <td>{{todo.priority}}</td>
+    </tr>
     </tbody>
   </table>
 </div>

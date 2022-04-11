@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection SqlResolve */
+/** @noinspection SqlNoDataSourceInspection */
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept');
@@ -20,7 +21,7 @@ $db = null;
 $filename = 'db/todo_' . $userParam->uid . '.sqlite';
 if (file_exists($filename)) {
 	$db = new SQLite3('db/todo_' . $userParam->uid . '.sqlite');
-	$results = $db->query("SELECT ID, CATEGORY, TITLE, DESCRIPTION, STATUS, datetime(DATE_DELETED, 'localtime') AS DT_DELETED from TODO_DELETED ORDER BY DT_DELETED DESC");
+	$results = $db->query("SELECT ID, CATEGORY, TITLE, DESCRIPTION, STATUS, datetime(DATE_DELETED, 'localtime') AS DT_DELETED, PRIORITY, datetime(CREATE_DT, 'localtime') AS DT_CREATED from TODO_DELETED ORDER BY DT_DELETED DESC");
 
 	$todos = array();
 	while ($row = $results->fetchArray()) {
@@ -31,6 +32,8 @@ if (file_exists($filename)) {
 		$todo->description = $row['DESCRIPTION'];
 		$todo->status = $row['STATUS'];
 		$todo->dateDeleted = $row['DT_DELETED'];
+    $todo->createdDate = $row['DT_CREATED'];
+    $todo->priority = $row['PRIORITY'];
 		array_push($todos, $todo);
 	}
 

@@ -4,7 +4,7 @@
 <div *ngIf="!initializing" class="container">
   <div class="row">
     <input [(ngModel)]="filterText" type="text" class="form-control col m-2" placeholder="Filter entries" (keyup)="filterItems($event)">
-    <select [(ngModel)]="filterCategory" class="form-control col m-2" id="filterCategory" name="filterCategory" (change)="onFilterCategory($event.target.value)">
+    <select [(ngModel)]="filterCategory" class="form-control col m-2" id="filterCategory" name="filterCategory" (change)="onFilterCategory($event)">
       <option value="NOSELECTION"></option>
       <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
     </select>
@@ -16,6 +16,8 @@
         <th>Cat</th>
         <th>Title</th>
         <th>Desc</th>
+        <th>Priority</th>
+        <th>Created</th>
       </tr>
     </thead>
     <tbody>
@@ -23,8 +25,9 @@
         <td>{{todo.dateDeleted}}</td>
         <td>{{todo.category}}</td>
         <td>{{todo.title}}</td>
-        <td placement="left" [ngbTooltip]="todo.description">{{todo.description ? shorten(todo.description) : "(No
-          Desc)" }}</td>
+        <td placement="left" [ngbTooltip]="todo.description">{{todo.description ? shorten(todo.description) : "(No Desc)" }}</td>
+        <td>{{todo.priority}}</td>
+        <td>{{todo.createdDate}}</td>
       </tr>
     </tbody>
   </table>

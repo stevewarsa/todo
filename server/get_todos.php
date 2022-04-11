@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection SqlNoDataSourceInspection */
+/** @noinspection SqlResolve */
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept');
@@ -20,7 +21,7 @@ $db = null;
 $filename = 'db/todo_' . $userParam->uid . '.sqlite';
 if (file_exists($filename)) {
 	$db = new SQLite3('db/todo_' . $userParam->uid . '.sqlite');
-	$results = $db->query('SELECT ID, CATEGORY, TITLE, DESCRIPTION, STATUS from TODO ORDER BY ID');
+	$results = $db->query('SELECT ID, CATEGORY, TITLE, DESCRIPTION, STATUS, PRIORITY, CREATE_DT from TODO ORDER BY ID');
 
 	$todos = array();
 	while ($row = $results->fetchArray()) {
@@ -29,7 +30,9 @@ if (file_exists($filename)) {
 		$todo->category = $row['CATEGORY'];
 		$todo->title = $row['TITLE'];
 		$todo->description = $row['DESCRIPTION'];
-		$todo->status = $row['STATUS'];
+    $todo->status = $row['STATUS'];
+    $todo->priority = $row['PRIORITY'];
+    $todo->createdDate = $row['CREATE_DT'];
 		array_push($todos, $todo);
 	}
 

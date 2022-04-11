@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection SqlNoDataSourceInspection */
+/** @noinspection SqlResolve */
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept');
@@ -15,7 +16,7 @@ $todoParam = json_decode($request);
 $todo = $todoParam->todo;
 $uid = $todoParam->uid;
 
-error_log("add_todo.php - Received data: uid=" . $uid . ", id=" . $todo->id . ", category=" . $todo->category . ", title=" . $todo->title . ", description=" . $todo->description . ", status=" . $todo->status);
+error_log("add_todo.php - Received data: uid=" . $uid . ", id=" . $todo->id . ", category=" . $todo->category . ", title=" . $todo->title . ", description=" . $todo->description . ", status=" . $todo->status . ", priority=" . $todo->priority);
 
 // now insert this TODO
 $db = null;
@@ -23,24 +24,26 @@ $filename = 'db/todo_' . $uid . '.sqlite';
 if (file_exists($filename)) {
 	$db = new SQLite3('db/todo_' . $uid . '.sqlite');
 	try {
-		$statement = $db->prepare('update TODO set CATEGORY = :category, TITLE = :title, DESCRIPTION = :description, STATUS = :status where ID = :id');
+		$statement = $db->prepare('update TODO set CATEGORY = :category, TITLE = :title, DESCRIPTION = :description, STATUS = :status, PRIORITY = :priority where ID = :id');
 		$statement->bindValue(':id', $todo->id);
 		$statement->bindValue(':category', $todo->category);
 		$statement->bindValue(':title', $todo->title);
 		$statement->bindValue(':description', $todo->description);
-		$statement->bindValue(':status', $todo->status);
+    $statement->bindValue(':status', $todo->status);
+    $statement->bindValue(':priority', $todo->priority);
 		$statement->execute();
 		$statement->close();
 
 		if ($db->changes() < 1) {
-			$statement = $db->prepare("insert into TODO (CATEGORY, TITLE, DESCRIPTION, STATUS) values (:category,:title,:description,:status)");
+			$statement = $db->prepare("insert into TODO (CATEGORY, TITLE, DESCRIPTION, STATUS, PRIORITY) values (:category,:title,:description,:status,:priority)");
 			$statement->bindValue(':category', $todo->category);
 			$statement->bindValue(':title', $todo->title);
 			$statement->bindValue(':description', $todo->description);
-			$statement->bindValue(':status', $todo->status);
+      $statement->bindValue(':status', $todo->status);
+      $statement->bindValue(':priority', $todo->priority);
 			$statement->execute();
 			$statement->close();
-			
+
 			// now get the newly generated id
 			$results = $db->query('SELECT last_insert_rowid() as id');
 			$id = -1;

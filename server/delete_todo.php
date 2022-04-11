@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection SqlResolve */
+/** @noinspection SqlNoDataSourceInspection */
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept');
@@ -15,7 +16,7 @@ $todoParam = json_decode($request);
 $todo = $todoParam->todo;
 $uid = $todoParam->uid;
 
-error_log("delete_todo.php - Received data: uid=" . $uid . ", id=" . $todo->id . ", category=" . $todo->category . ", title=" . $todo->title . ", description=" . $todo->description . ", status=" . $todo->status);
+error_log("delete_todo.php - Received data: uid=" . $uid . ", id=" . $todo->id . ", category=" . $todo->category . ", title=" . $todo->title . ", description=" . $todo->description . ", status=" . $todo->status . ", priority=" . $todo->priority);
 
 $db = null;
 $filename = 'db/todo_' . $uid . '.sqlite';

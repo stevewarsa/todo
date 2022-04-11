@@ -14,16 +14,22 @@
         <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
       </select>
     </div>
+    <div class="form-group">
+      <label class="mr-2" for="existingcategory">Priority (1 is highest):</label>
+      <select class="form-control" id="priority" name="priority" (change)="updatePriority($event)" [ngModel]="todo.priority">
+        <option *ngFor="let item of [].constructor(10); let i = index" value="{{i + 1}}">{{i + 1}}</option>
+      </select>
+    </div>
     <div class="form-group mr-3">
       <label class="mr-2" for="title">Title:</label>
       <input type="text" class="form-control" id="title" name="title" [(ngModel)]="todo.title">
     </div>
     <div class="form-group mr-3">
       <label class="mr-2" for="desc">Description:</label>
-      <textarea class="form-control" name="desc" id="desc" name="desc" cols="20" rows="5" [(ngModel)]="todo.description"></textarea>
+      <textarea class="form-control" id="desc" name="desc" cols="20" rows="5" [(ngModel)]="todo.description"></textarea>
     </div>
-    <div class="form-group mr-3" *ngIf="errorMessage !== null" style="padding: 10px !important;">
-      <font color="red"><b>{{errorMessage}}</b></font>
+    <div class="form-group mr-3" *ngIf="errorMessage !== null" style="padding: 10px !important; color: red; font-weight: bold">
+      {{errorMessage}}
     </div>
     <button type="button" (click)="updateTodo()" class="btn btn-primary mr-2">Save</button>
     <button type="button" (click)="deleteTodo()" class="btn btn-danger mr-2">Delete</button>

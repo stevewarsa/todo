@@ -82,7 +82,8 @@ export class DeletedItemsComponent implements OnInit {
     });
   }
 
-  onFilterCategory(category: string) {
+  onFilterCategory(evt: any) {
+    let category: string = evt.target.value;
     this.filteredTodos = [];
     this.listOfTodos.forEach(td => this.filteredTodos.push(Object.assign({}, td)));
     if (category !== "NOSELECTION") {
