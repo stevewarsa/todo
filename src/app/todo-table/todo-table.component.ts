@@ -76,6 +76,7 @@ export class TodoTableComponent implements OnInit {
   }
 
   private doDefaultSort(todos) {
+    this.prioritySort = true;
     this.listOfTodos = (todos as Todo[]).sort((a, b) => a.priority - b.priority);
     this.listOfTodos.forEach(td => {
       this.filteredTodos.push(Object.assign({}, td));
