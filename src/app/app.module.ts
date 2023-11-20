@@ -16,27 +16,24 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TodoTableComponent,
-    LoginComponent,
-    ViewEditTodoComponent,
-    ConfirmComponent,
-    TopNavComponent,
-    DeletedItemsComponent,
-    ChangePasswordComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    NgbModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    ConfirmComponent
-  ]
+    declarations: [
+        AppComponent,
+        TodoTableComponent,
+        LoginComponent,
+        ViewEditTodoComponent,
+        ConfirmComponent,
+        TopNavComponent,
+        DeletedItemsComponent,
+        ChangePasswordComponent
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        NgbModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
