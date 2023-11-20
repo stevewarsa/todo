@@ -50,20 +50,22 @@
       <option *ngFor="let item of [].constructor(10); let i = index" value="{{i + 1}}">Priority {{i + 1}}</option>
     </select>
   </div>
-  <table class="table table-condensed table-striped table-bordered">
-    <thead>
-    <tr>
-      <th>Cat</th>
-      <th>Title</th>
-      <th>Pri <i class="fa fa-sort-desc" (click)="doSort()"></i></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let todo of filteredTodos">
-      <td>{{todo.category}}</td>
-      <td><a (click)="editTodo(todo)">{{todo.title}}</a></td>
-      <td>{{todo.priority}}</td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+	  <table class="table table-condensed table-striped table-bordered">
+		<thead>
+		<tr>
+		  <th>Cat</th>
+		  <th>Title</th>
+		  <th>Pri <i class="fa fa-sort-desc" (click)="doSort()"></i></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr *ngFor="let todo of filteredTodos">
+		  <td>{{todo.category}}</td>
+		  <td><a (click)="editTodo(todo)">{{todo.title}}</a></td>
+		  <td>{{todo.priority}}</td>
+		</tr>
+		</tbody>
+	  </table>
+  </div>
 </div>

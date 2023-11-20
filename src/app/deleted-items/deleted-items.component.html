@@ -9,26 +9,28 @@
       <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
     </select>
   </div>
-  <table class="table table-condensed table-striped table-bordered">
-    <thead>
-      <tr>
-        <th>Delete Date</th>
-        <th>Cat</th>
-        <th>Title</th>
-        <th>Desc</th>
-        <th>Priority</th>
-        <th>Created</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let todo of filteredTodos">
-        <td>{{todo.dateDeleted}}</td>
-        <td>{{todo.category}}</td>
-        <td>{{todo.title}}</td>
-        <td placement="left" [ngbTooltip]="todo.description">{{todo.description ? shorten(todo.description) : "(No Desc)" }}</td>
-        <td>{{todo.priority}}</td>
-        <td>{{todo.createdDate}}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-condensed table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Delete Date</th>
+          <th>Cat</th>
+          <th>Title</th>
+          <th>Desc</th>
+          <th>Priority</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let todo of filteredTodos">
+          <td>{{todo.dateDeleted}}</td>
+          <td>{{todo.category}}</td>
+          <td>{{todo.title}}</td>
+          <td placement="left" [ngbTooltip]="todo.description">{{todo.description ? shorten(todo.description) : "(No Desc)" }}</td>
+          <td>{{todo.priority}}</td>
+          <td>{{todo.createdDate}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

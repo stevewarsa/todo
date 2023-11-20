@@ -16,7 +16,6 @@ export class TodoTableComponent implements OnInit {
   filterText: string = null;
   filterCategory: string = "NOSELECTION";
   mobile: boolean = false;
-  private MAX_LEN: number = 50;
   private currUser: string = null;
   newCategory: string = null;
   initializing: boolean = false;
@@ -41,6 +40,10 @@ export class TodoTableComponent implements OnInit {
     if (window.screen.width < 700) { // 768px portrait
       this.mobile = true;
     }
+    this.getTodosFromDb();
+  }
+
+  private getTodosFromDb() {
     this.initializing = true;
     this.initializingMessage = "Initializing list of TODOs...";
     let catObs = this.databaseService.getCategories(<UserParam>{uid: this.currUser});
@@ -56,7 +59,7 @@ export class TodoTableComponent implements OnInit {
         if (!cats.includes("Default")) {
           cats.push("Default");
         }
-        this.categories = cats.sort();
+        this.categories = cats.sort((a, b) => a.localeCompare(b));
       }
       let todos = response[1];
       if (typeof todos === 'string') {
@@ -79,7 +82,7 @@ export class TodoTableComponent implements OnInit {
     this.prioritySort = true;
     this.listOfTodos = (todos as Todo[]).sort((a, b) => a.priority - b.priority);
     this.listOfTodos.forEach(td => {
-      this.filteredTodos.push(Object.assign({}, td));
+      this.filteredTodos.push({...td});
     });
   }
 
@@ -108,10 +111,10 @@ export class TodoTableComponent implements OnInit {
         }
       } else {
         this.listOfTodos.unshift(returnedTodo);
-        this.filteredTodos.unshift(Object.assign({}, returnedTodo));
+        this.filteredTodos.unshift({...returnedTodo});
         if (!this.categories.includes(returnedTodo.category)) {
           this.categories.push(returnedTodo.category);
-          this.categories = this.categories.sort();
+          this.categories = this.categories.sort((a, b) => a.localeCompare(b));
         }
       }
       this.cleanupAfterAddEditForm();
@@ -140,15 +143,6 @@ export class TodoTableComponent implements OnInit {
     this.filterCategory = evt.target.value;
     this.doFilter();
   }
-
-  shorten(description: string): string {
-    if (description.length > this.MAX_LEN) {
-      return description.substring(0, this.MAX_LEN - 3) + "...";
-    } else {
-      return description;
-    }
-  }
-
   onFilterPriority(evt: any) {
     this.filterPriority = parseInt(evt.target.value);
     this.doFilter();
@@ -156,11 +150,11 @@ export class TodoTableComponent implements OnInit {
 
   private doFilter() {
     let locFilteredTodos = [];
-    this.listOfTodos.forEach(td => locFilteredTodos.push(Object.assign({}, td)));
+    this.listOfTodos.forEach(td => locFilteredTodos.push({...td}));
     if (this.filterText && this.filterText.trim() !== "") {
       locFilteredTodos = locFilteredTodos.filter(td => {
         for (let field of ["category", "title", "description"]) {
-          if (td[field] && td[field].toUpperCase().includes(this.filterText)) {
+          if (td[field]?.toUpperCase().includes(this.filterText)) {
             return true;
           }
         }
