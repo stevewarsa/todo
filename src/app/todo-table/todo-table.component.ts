@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {Todo} from '../todo';
 import {UserParam} from '../user-param';
 import {forkJoin} from 'rxjs';
+import * as moment from "moment";
 
 @Component({
   templateUrl: './todo-table.component.html',
@@ -27,6 +28,7 @@ export class TodoTableComponent implements OnInit {
   @ViewChild('titleInput') titleInput: ElementRef;
   filterPriority: number = -1;
   prioritySort: boolean = false;
+  sortBy: string = "NOSELECTION";
 
   constructor(private databaseService: DatabaseService, private route: Router) {}
 
@@ -148,6 +150,44 @@ export class TodoTableComponent implements OnInit {
   onFilterPriority(evt: any) {
     this.filterPriority = parseInt(evt.target.value);
     this.doFilter();
+  }
+
+  onChangeSort(evt: any) {
+    this.sortBy = evt.target.value;
+    switch (this.sortBy) {
+      case "NOSELECTION":
+        console.log("todo-table.onChangeSort - doing default sort...");
+        this.doDefaultSort(this.filteredTodos);
+        break;
+      case "createDt":
+        console.log("todo-table.onChangeSort - sorting by create date...");
+        this.filteredTodos = this.filteredTodos.sort((a, b) => {
+          let createDtA = moment(a.createdDate, "YYYY-MM-DD HH:mm:ss");
+          let createDtB = moment(b.createdDate, "YYYY-MM-DD HH:mm:ss");
+          if (createDtA.isSame(createDtB)) {
+            return 0;
+          } else {
+            return createDtA.isAfter(createDtB) ? -1 : 1;
+          }
+        });
+        break;
+      case "title":
+        console.log("todo-table.onChangeSort - sorting by title...");
+        this.filteredTodos = this.filteredTodos.sort((a, b) => a.title.toUpperCase().localeCompare(b.title.toUpperCase()));
+        break;
+      case "category":
+        console.log("todo-table.onChangeSort - sorting by category...");
+        this.filteredTodos = this.filteredTodos.sort((a, b) => a.category.toUpperCase().localeCompare(b.category.toUpperCase()));
+        break;
+      case "priority":
+        console.log("todo-table.onChangeSort - sorting by priority...");
+        this.filteredTodos = this.filteredTodos.sort((a, b) => a.priority - b.priority);
+        break;
+    }
+  }
+
+  private isDateAfter(date1: Date, date2: Date) {
+    return moment(date2).isAfter(date1);
   }
 
   private doFilter() {

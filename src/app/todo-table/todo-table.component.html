@@ -2,11 +2,20 @@
   {{initializingMessage}}
 </div>
 <div *ngIf="!initializing" class="container">
-  <button [hidden]="showAddForm" (click)="viewAddForm()" type="button" class="btn btn-secondary mb-2"><i class="fa fa-plus-square"></i> Show Add Form
-  </button>
-  <button [hidden]="!showAddForm" (click)="showAddForm = false" type="button" class="btn btn-secondary mb-2"><i
-    class="fa fa-minus-square-o"></i> Hide Add Form
-  </button>
+  <div class="row">
+    <button [hidden]="showAddForm" (click)="viewAddForm()" type="button" class="btn btn-secondary col mb-2"><i class="fa fa-plus-square"></i> Show Add Form
+    </button>
+    <button [hidden]="!showAddForm" (click)="showAddForm = false" type="button" class="btn btn-secondary col mb-2"><i
+      class="fa fa-minus-square-o"></i> Hide Add Form
+    </button>
+    <select [(ngModel)]="sortBy" class="form-control col m-2" id="sortBy" name="sortBy" (change)="onChangeSort($event)">
+      <option value="category">Category</option>
+      <option value="createDt">Create Dt</option>
+      <option value="NOSELECTION">Default Sort</option>
+      <option value="priority">Priority</option>
+      <option value="title">Title</option>
+    </select>
+  </div>
   <form [hidden]="!showAddForm" class="mr-3 mb-2">
     <div class="form-group">
       <label class="mr-2" for="newcategory">New Category:</label>
@@ -56,7 +65,7 @@
 		<tr>
 		  <th>Cat</th>
 		  <th>Title - Desc</th>
-		  <th>Pri <i class="fa fa-sort-desc" (click)="doSort()"></i></th>
+		  <th>Pri</th>
 		</tr>
 		</thead>
 		<tbody>
