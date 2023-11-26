@@ -55,14 +55,14 @@
 		<thead>
 		<tr>
 		  <th>Cat</th>
-		  <th>Title</th>
+		  <th>Title - Desc</th>
 		  <th>Pri <i class="fa fa-sort-desc" (click)="doSort()"></i></th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr *ngFor="let todo of filteredTodos">
 		  <td>{{todo.category}}</td>
-		  <td><a (click)="editTodo(todo)">{{todo.title}}</a></td>
+		  <td><a (click)="editTodo(todo)">{{todo.title}}  {{todo.description !== "" && todo.description !== null ? "(" + shorten(todo.description) + ")" : ""}}</a></td>
 		  <td>{{todo.priority}}</td>
 		</tr>
 		</tbody>

@@ -100,11 +100,13 @@ export class TodoTableComponent implements OnInit {
   addTodo() {
     this.initializing = true;
     this.initializingMessage = "Adding new TODO...";
+    let newCat = false;
     // if the new category exists, overwrite the existing category with it
     if (this.newCategory && this.newCategory.trim().length > 2) {
       this.todoToAdd.category = this.newCategory.trim();
+      newCat = true;
     }
-    this.databaseService.addTodo(<TodoParam>{uid: this.currUser,todo: this.todoToAdd}).subscribe((returnedTodo: any) => {
+    this.databaseService.addTodo(<TodoParam>{uid: this.currUser, newCategory: newCat, todo: this.todoToAdd}).subscribe((returnedTodo: any) => {
       if (typeof returnedTodo === 'string') {
         if (returnedTodo.startsWith("error|")) {
           console.log(returnedTodo.split("|")[1]);
@@ -130,7 +132,7 @@ export class TodoTableComponent implements OnInit {
 
   editTodo(td: Todo) {
     // clone it...
-    this.databaseService.editingTodo = Object.assign({}, td);
+    this.databaseService.editingTodo = {...td};
     this.route.navigate(['view']);
   }
 
@@ -183,6 +185,14 @@ export class TodoTableComponent implements OnInit {
     } else {
       this.prioritySort = true;
       this.filteredTodos = this.filteredTodos.sort((a, b) => a.priority - b.priority);
+    }
+  }
+
+  shorten(description: string): string {
+    if (description.length > 30) {
+      return description.substring(0, 30 - 3) + "...";
+    } else {
+      return description;
     }
   }
 }
