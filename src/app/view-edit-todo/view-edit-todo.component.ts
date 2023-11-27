@@ -58,10 +58,12 @@ export class ViewEditTodoComponent implements OnInit {
     this.initializing = true;
     this.initializingMessage = "Saving changes to TODO...";
     // if the user has entered a new category, overwrite existing
+    let newCat = false;
     if (this.newCategory && this.newCategory.trim().length > 2) {
       this.todo.category = this.newCategory.trim();
+      newCat = true;
     }
-    this.databaseService.editTodo(<TodoParam>{uid: this.currentUser, todo: this.todo}).subscribe((todo: any) => {
+    this.databaseService.editTodo(<TodoParam>{uid: this.currentUser, newCategory: newCat, todo: this.todo}).subscribe((todo: any) => {
       if (typeof todo === 'string') {
         if (todo.startsWith("error|")) {
           console.log(todo.split("|")[1]);
